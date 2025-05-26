@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -28,6 +27,23 @@
       animation: desaparecer 2s ease-out forwards;
     }
 
+    #playButton {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      background: #ff69b4;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      z-index: 20;
+      color: white;
+      box-shadow: 0 0 10px white;
+    }
+
     @keyframes desaparecer {
       0% { opacity: 1; transform: scale(1); }
       100% { opacity: 0; transform: scale(2); }
@@ -36,6 +52,7 @@
 </head>
 <body>
   <canvas id="canvas"></canvas>
+  <button id="playButton">▶ Reproducir música</button>
 
   <!-- Hotel - Montell Fish -->
   <audio id="musica" src="https://ia802606.us.archive.org/35/items/montellfishhotel/Montell%20Fish%20-%20Hotel.mp3" preload="auto" loop></audio>
@@ -44,6 +61,7 @@
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     const musica = document.getElementById('musica');
+    const playButton = document.getElementById('playButton');
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -92,25 +110,25 @@
       }, 2000);
     }
 
-    // Inicia música solo una vez
-    let musicaEmpezada = false;
-
     function iniciarAmor(event) {
       const x = event.clientX || event.touches[0].clientX;
       const y = event.clientY || event.touches[0].clientY;
 
       mostrarTeAmo(x, y);
-
-      if (!musicaEmpezada) {
-        musica.play().catch(e => {
-          console.log('El navegador bloqueó el audio hasta interacción directa');
-        });
-        musicaEmpezada = true;
-      }
     }
 
+    // Mostrar mensaje al clic
     document.addEventListener('click', iniciarAmor);
     document.addEventListener('touchstart', iniciarAmor);
+
+    // Botón para iniciar la música
+    playButton.addEventListener('click', () => {
+      musica.play().then(() => {
+        playButton.style.display = 'none';
+      }).catch((e) => {
+        alert('El navegador bloqueó el audio. Intenta tocar la pantalla nuevamente.');
+      });
+    });
   </script>
 </body>
 </html>
