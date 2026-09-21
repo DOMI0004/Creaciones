@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Flores Para Ti 🌻</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at center, #2a1a4a 0%, #0d0618 70%, #050208 100%);
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 40px 20px 60px;
+      position: relative;
+      color: #fff;
+    }
+
+    /* Estrellas y partículas */
+    .stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      background: #ffe066;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #ffd700, 0 0 12px #ffaa00;
+      animation: twinkle 2.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.3; transform: scale(0.7); }
+      100% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Título */
+    .title {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .title h1 {
+      font-size: clamp(2.8rem, 10vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.05;
+      background: linear-gradient(180deg, #fff9c4 0%, #ffd700 40%, #ffaa00 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 
+        0 0 20px rgba(255, 215, 0, 0.8),
+        0 0 40px rgba(255, 170, 0, 0.5),
+        0 0 60px rgba(255, 140, 0, 0.3);
+      letter-spacing: -1px;
+    }
+
+    .title .emoji {
+      font-size: 1.1em;
+      filter: drop-shadow(0 0 12px #ffd700);
+      display: inline-block;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    /* Reproductor */
+    .player {
+      position: relative;
+      z-index: 10;
+      background: rgba(30, 20, 50, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 215, 0, 0.35);
+      border-radius: 50px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: min(340px, 90vw);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(255, 180, 0, 0.15);
+      margin: 25px 0;
+    }
+
+    .play-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #ffd700, #ffaa00);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 0 15px rgba(255, 200, 0, 0.5);
+      transition: transform 0.2s;
+    }
+
+    .play-btn:active {
+      transform: scale(0.92);
+    }
+
+    .play-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: #1a0f2e;
+    }
+
+    .player-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .song-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .song-title span {
+      color: #ff6b8a;
+    }
+
+    .progress-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .time {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.7);
+      min-width: 32px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 2px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ffd700, #ffaa00);
+      border-radius: 2px;
+      transition: width 0.1s linear;
+    }
+
+    /* Ramo de girasoles */
+    .bouquet {
+      position: relative;
+      z-index: 5;
+      width: min(320px, 85vw);
+      height: min(380px, 55vh);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .sunflower {
+      position: absolute;
+      transform-origin: center bottom;
+      filter: drop-shadow(0 0 12px rgba(255, 200, 0, 0.6));
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .sunflower:nth-child(1) { left: 50%; bottom: 40px; transform: translateX(-50%) scale(1.15); z-index: 6; animation-delay: 0s; }
+    .sunflower:nth-child(2) { left: 18%; bottom: 70px; transform: rotate(-18deg) scale(0.95); z-index: 5; animation-delay: 0.4s; }
+    .sunflower:nth-child(3) { left: 68%; bottom: 65px; transform: rotate(15deg) scale(0.95); z-index: 5; animation-delay: 0.8s; }
+    .sunflower:nth-child(4) { left: 8%; bottom: 130px; transform: rotate(-28deg) scale(0.82); z-index: 4; animation-delay: 1.2s; }
+    .sunflower:nth-child(5) { left: 78%; bottom: 125px; transform: rotate(25deg) scale(0.82); z-index: 4; animation-delay: 1.6s; }
+    .sunflower:nth-child(6) { left: 28%; bottom: 160px; transform: rotate(-12deg) scale(0.75); z-index: 3; animation-delay: 0.6s; }
+    .sunflower:nth-child(7) { left: 58%; bottom: 155px; transform: rotate(10deg) scale(0.75); z-index: 3; animation-delay: 1.0s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
+      50% { transform: translateY(-8px) rotate(var(--r, 0deg)); }
+    }
+
+    /* SVG girasol */
+    .sf-svg {
+      width: 90px;
+      height: 110px;
+    }
+
+    /* Hojas / tallos */
+    .leaves {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 220px;
+      height: 180px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .leaf {
+      position: absolute;
+      background: linear-gradient(135deg, #2e8b3a, #1a5c28);
+      border-radius: 50% 0 50% 50%;
+      opacity: 0.95;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+    }
+
+    /* Instrucciones pequeñas */
+    .hint {
+      position: fixed;
+      bottom: 12px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.4);
+      z-index: 20;
+    }
+
+    /* Partículas brillantes extra */
+    .sparkle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #ffd700;
+      animation: sparkle 3s linear infinite;
+    }
+
+    @keyframes sparkle {
+      0% { opacity: 0; transform: translateY(0) scale(0); }
+      20% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-120px) scale(1.5); }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+
+  <div class="title">
+    <h1>Flores<br>Para Ti <span class="emoji">🌻</span></h1>
+  </div>
+
+  <div class="player">
+    <button class="play-btn" id="playBtn" aria-label="Reproducir">
+      <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      <svg id="pauseIcon" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+    </button>
+    <div class="player-info">
+      <div class="song-title">Feliz 21 de septiembre <span>❤️</span></div>
+      <div class="progress-container">
+        <span class="time" id="currentTime">0:00</span>
+        <div class="progress-bar" id="progressBar">
+          <div class="progress" id="progress"></div>
+        </div>
+        <span class="time" id="duration">0:00</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bouquet" id="bouquet">
+    <!-- 7 girasoles -->
+    <div class="sunflower" style="--r:0deg">
+      <svg class="sf-svg" viewBox="0 0 100 120">
+        <defs>
+          <radialGradient id="centerGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#3d2314"/>
+            <stop offset="70%" stop-color="#5c3a1e"/>
+            <stop offset="100%" stop-color="#2a160c"/>
+          </radialGradient>
+        </defs>
+        <!-- pétalos -->
+        <g fill="#FFD700" stroke="#FFA500" stroke-width="0.8">
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(0 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(30 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(60 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(90 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(120 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(150 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(180 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(210 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(240 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(270 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(300 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(330 50 50)"/>
+        </g>
+        <!-- centro -->
+        <circle cx="50" cy="50" r="16" fill="url(#centerGrad)"/>
+        <circle cx="50" cy="50" r="11" fill="#2a160c"/>
+        <!-- semillas -->
+        <g fill="#1a0f08">
+          <circle cx="46" cy="46" r="1.2"/><circle cx="54" cy="46" r="1.2"/>
+          <circle cx="46" cy="54" r="1.2"/><circle cx="54" cy="54" r="1.2"/>
+          <circle cx="50" cy="42" r="1.1"/><circle cx="50" cy="58" r="1.1"/>
+          <circle cx="42" cy="50" r="1.1"/><circle cx="58" cy="50" r="1.1"/>
+        </g>
+        <!-- tallo -->
+        <path d="M50 66 Q48 90 50 115" stroke="#2e7d32" stroke-width="4" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="sunflower" style="--r:-18deg">
+      <svg class="sf-svg" viewBox="0 0 100 120">
+        <g fill="#FFD700" stroke="#FFA500" stroke-width="0.8">
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(0 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(30 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(60 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(90 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(120 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(150 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(180 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(210 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(240 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(270 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(300 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(330 50 50)"/>
+        </g>
+        <circle cx="50" cy="50" r="16" fill="#3d2314"/>
+        <circle cx="50" cy="50" r="11" fill="#2a160c"/>
+        <path d="M50 66 Q52 95 48 115" stroke="#2e7d32" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="sunflower" style="--r:15deg">
+      <svg class="sf-svg" viewBox="0 0 100 120">
+        <g fill="#FFD700" stroke="#FFA500" stroke-width="0.8">
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(0 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(30 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(60 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(90 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(120 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(150 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(180 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(210 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(240 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(270 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(300 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(330 50 50)"/>
+        </g>
+        <circle cx="50" cy="50" r="16" fill="#3d2314"/>
+        <circle cx="50" cy="50" r="11" fill="#2a160c"/>
+        <path d="M50 66 Q47 92 52 115" stroke="#2e7d32" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="sunflower" style="--r:-28deg">
+      <svg class="sf-svg" viewBox="0 0 100 120" style="width:75px;height:95px">
+        <g fill="#FFD700" stroke="#FFA500" stroke-width="0.8">
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(0 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(45 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(90 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(135 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(180 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(225 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(270 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(315 50 50)"/>
+        </g>
+        <circle cx="50" cy="50" r="14" fill="#3d2314"/>
+        <circle cx="50" cy="50" r="9" fill="#2a160c"/>
+        <path d="M50 64 Q53 95 50 115" stroke="#2e7d32" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="sunflower" style="--r:25deg">
+      <svg class="sf-svg" viewBox="0 0 100 120" style="width:75px;height:95px">
+        <g fill="#FFD700" stroke="#FFA500" stroke-width="0.8">
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(0 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(45 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(90 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(135 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(180 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(225 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(270 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(315 50 50)"/>
+        </g>
+        <circle cx="50" cy="50" r="14" fill="#3d2314"/>
+        <circle cx="50" cy="50" r="9" fill="#2a160c"/>
+        <path d="M50 64 Q47 95 50 115" stroke="#2e7d32" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="sunflower" style="--r:-12deg">
+      <svg class="sf-svg" viewBox="0 0 100 120" style="width:68px;height:88px">
+        <g fill="#FFD700" stroke="#FFA500" stroke-width="0.8">
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(0 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(40 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(80 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(120 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(160 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(200 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(240 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(280 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(320 50 50)"/>
+        </g>
+        <circle cx="50" cy="50" r="13" fill="#3d2314"/>
+        <circle cx="50" cy="50" r="8" fill="#2a160c"/>
+        <path d="M50 63 Q48 95 50 115" stroke="#2e7d32" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="sunflower" style="--r:10deg">
+      <svg class="sf-svg" viewBox="0 0 100 120" style="width:68px;height:88px">
+        <g fill="#FFD700" stroke="#FFA500" stroke-width="0.8">
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(0 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(40 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(80 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(120 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(160 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(200 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(240 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(280 50 50)"/>
+          <ellipse cx="50" cy="22" rx="9" ry="22" transform="rotate(320 50 50)"/>
+        </g>
+        <circle cx="50" cy="50" r="13" fill="#3d2314"/>
+        <circle cx="50" cy="50" r="8" fill="#2a160c"/>
+        <path d="M50 63 Q52 95 50 115" stroke="#2e7d32" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <!-- Hojas verdes -->
+    <svg class="leaves" viewBox="0 0 220 180">
+      <path d="M110 180 Q60 140 30 90 Q50 120 80 140 Q70 100 40 60 Q70 90 100 130 Q90 80 60 40 Q95 80 115 140" fill="#2e8b3a" opacity="0.9"/>
+      <path d="M110 180 Q160 140 190 90 Q170 120 140 140 Q150 100 180 60 Q150 90 120 130 Q130 80 160 40 Q125 80 105 140" fill="#1a6b2a" opacity="0.9"/>
+      <path d="M110 180 Q90 150 70 110 Q85 130 105 155" fill="#3a9b4a"/>
+      <path d="M110 180 Q130 150 150 110 Q135 130 115 155" fill="#2e8b3a"/>
+      <ellipse cx="55" cy="95" rx="28" ry="14" transform="rotate(-40 55 95)" fill="#2e8b3a"/>
+      <ellipse cx="165" cy="90" rx="28" ry="14" transform="rotate(35 165 90)" fill="#1a6b2a"/>
+      <ellipse cx="75" cy="130" rx="22" ry="11" transform="rotate(-25 75 130)" fill="#3a9b4a"/>
+      <ellipse cx="145" cy="125" rx="22" ry="11" transform="rotate(20 145 125)" fill="#2e8b3a"/>
+    </svg>
+  </div>
+
+  <div class="hint">Toca el botón ▶ para reproducir </div>
+
+  <!-- AUDIO: reemplaza "tu-cancion.mp3" por el nombre de tu archivo -->
+  <audio id="audio" loop preload="metadata">
+    <!-- Pon aquí la ruta de tu canción (ej: FloresAmarillas.mp3) -->
+    <source src="Flores Amarillas.mp3" type="audio/mpeg">
+    Tu navegador no soporta audio.
+  </audio>
+
+  <script>
+    // Crear estrellas
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 60; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      const size = Math.random() * 3 + 1;
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = Math.random() * 3 + 's';
+      starsContainer.appendChild(star);
+    }
+
+    // Sparkles ocasionales
+    setInterval(() => {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      s.style.left = (20 + Math.random() * 60) + '%';
+      s.style.bottom = '15%';
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 3000);
+    }, 800);
+
+    // Reproductor
+    const audio = document.getElementById('audio');
+    const playBtn = document.getElementById('playBtn');
+    const playIcon = document.getElementById('playIcon');
+    const pauseIcon = document.getElementById('pauseIcon');
+    const progress = document.getElementById('progress');
+    const progressBar = document.getElementById('progressBar');
+    const currentTimeEl = document.getElementById('currentTime');
+    const durationEl = document.getElementById('duration');
+
+    let isPlaying = false;
+
+    function formatTime(sec) {
+      if (isNaN(sec)) return '0:00';
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    playBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        audio.pause();
+        playIcon.style.display = 'block';
+        pauseIcon.style.display = 'none';
+      } else {
+        audio.play().catch(() => {
+          alert('Agrega un archivo de audio llamado "tu-cancion.mp3" en la misma carpeta, o cambia la ruta en el código.');
+        });
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'block';
+      }
+      isPlaying = !isPlaying;
+    });
+
+    audio.addEventListener('loadedmetadata', () => {
+      durationEl.textContent = formatTime(audio.duration);
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      const percent = (audio.currentTime / audio.duration) * 100 || 0;
+      progress.style.width = percent + '%';
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+    });
+
+    progressBar.addEventListener('click', (e) => {
+      const rect = progressBar.getBoundingClientRect();
+      const percent = (e.clientX - rect.left) / rect.width;
+      audio.currentTime = percent * audio.duration;
+    });
+
+    audio.addEventListener('ended', () => {
+      isPlaying = false;
+      playIcon.style.display = 'block';
+      pauseIcon.style.display = 'none';
+    });
+  </script>
+</body>
+</html>
